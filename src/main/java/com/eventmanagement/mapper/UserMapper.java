@@ -1,11 +1,14 @@
 package com.eventmanagement.mapper;
 
+import com.eventmanagement.dto.EventRequestDTO;
 import com.eventmanagement.dto.UserRequestDTO;
 import com.eventmanagement.dto.UserResponseDTO;
+import com.eventmanagement.entity.Event;
 import com.eventmanagement.entity.Role;
 import com.eventmanagement.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 import java.util.Set;
@@ -45,5 +48,13 @@ public interface UserMapper {
                 .map(Role::getName)
                 .collect(Collectors.toSet());
     }
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "passwordHash", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "enabled", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    void updateEntity(UserRequestDTO userRequestDTO, @MappingTarget User user);
 
 }
