@@ -63,8 +63,7 @@ public class ReservationService {
             if(!tt.getEvent().getId().equals(event.getId())){
                 throw new IllegalArgumentException("Le type de billet n'appartient pas à cet évenement");
             }
-
-            if(tt.getStock() < itemDTO.getQuantity()){
+                        if(tt.getStock() < itemDTO.getQuantity()){
                 throw new IllegalArgumentException("Stock insuffisant pour: "+tt.getName());
             }
 
@@ -139,5 +138,17 @@ public class ReservationService {
     }
 
 
+    public void cancelReservation(Long id, Long userId) {
+
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Reservation introuvable"));
+
+        if (!userId.equals(reservation.getUser().getId())){
+            throw new RuntimeException("Non autorisé");
+        }
+
+        reservationRepository.delete(reservation);
+
+    }
 }
 

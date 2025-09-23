@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,10 +21,10 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserService {
 
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
-    private UserMapper userMapper;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, UserMapper userMapper){
         this.passwordEncoder=passwordEncoder;
@@ -86,7 +87,7 @@ public class UserService {
     public void deactivateUser(Long id){
         User user = userRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Utilisateur introuvable: "+id));
-        user.setEnabled(true);
+        user.setEnabled(false);
         userRepository.save(user);
     }
 
@@ -108,4 +109,24 @@ public class UserService {
         return userMapper.toResponseDTO(userRepository.save(user));
     }
 
+    public List<UserResponseDTO> findActiveUsers(){
+
+        List<User> users = userRepository.findByEnabled(true);
+        return userMapper.toResponseDTOList(users);
+    }
+
+    public UserResponseDTO findByEmail(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new RuntimeException("Utilisateur introuvable"));
+        return userMapper.toResponseDTO(user);
+    }
+
+    public void activateUser(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvale"));
+
+        user.setEnabled(true);
+        userRepository.save(user);
+    }
 }

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -106,4 +107,22 @@ public class EventService {
         return ticketTypeMapper.toResponseDTO(persisted);
     }
 
+    public Page<EventResponseDTO> searchEvents(String q, Pageable pageable) {
+
+        Page<Event> eventResponseDTOs = eventRepository.searchEvents(q,pageable);
+
+        return eventResponseDTOs.map(eventMapper::toResponseDTO);
+    }
+
+    public Page<EventResponseDTO> findByCity(String city, Pageable pageable) {
+
+        Page<Event> events = eventRepository.findByCity(city, pageable);
+        return events.map(eventMapper::toResponseDTO);
+    }
+
+    public Page<EventResponseDTO> findByUserId(Long userId, Pageable pageable) {
+
+        Page<Event> events = eventRepository.findByCreatedById(userId, pageable);
+        return events.map(eventMapper::toResponseDTO);
+    }
 }

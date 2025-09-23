@@ -1,11 +1,12 @@
 package com.eventmanagement.dto;
 
+import com.eventmanagement.validation.ValidReservation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-
 import java.util.List;
 
+@ValidReservation
 public class ReservationRequestDTO {
 
     @NotNull(message = "L'evenement est obligatoire")

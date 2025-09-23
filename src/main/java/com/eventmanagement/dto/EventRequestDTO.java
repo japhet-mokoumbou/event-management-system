@@ -1,12 +1,13 @@
 package com.eventmanagement.dto;
 
+import com.eventmanagement.validation.ValidEventDates;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 import java.time.LocalDateTime;
 
+@ValidEventDates
 public class EventRequestDTO {
 
     @NotBlank(message = "Le titre est obligatoire")

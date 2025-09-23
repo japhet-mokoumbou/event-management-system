@@ -1,5 +1,7 @@
 package com.eventmanagement.dto;
 
+import com.eventmanagement.validation.ValidEmail;
+import com.eventmanagement.validation.ValidPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -13,10 +15,12 @@ public class UserRequestDTO {
     @NotBlank(message = "L'email est obligatoire")
     @Email(message = "L'email doit être valide")
     @Size(max = 180, message = "L'email ne peut pas dépasser 180 caractères")
+    @ValidEmail
     private String email;
 
     @NotBlank(message = "Le mot de passe est obligatoire")
     @Size(min = 8, max = 100, message = "Le mot de passe doit contenir entre 8 et 100 caractères")
+    @ValidPassword
     private String password;
 
     public UserRequestDTO() {

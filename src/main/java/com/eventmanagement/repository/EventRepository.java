@@ -1,5 +1,6 @@
 package com.eventmanagement.repository;
 
+import com.eventmanagement.dto.EventResponseDTO;
 import com.eventmanagement.entity.Event;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +30,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                       @Param("endDate") LocalDateTime endDate,
                                       Pageable pageable);
 
+    Page<Event> findByCity(String city, Pageable pageable);
 
 }
