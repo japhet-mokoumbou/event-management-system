@@ -4,6 +4,7 @@ import com.eventmanagement.dto.LoginRequestDTO;
 import com.eventmanagement.dto.AuthResponseDTO;
 import com.eventmanagement.dto.UserRequestDTO;
 import com.eventmanagement.dto.UserResponseDTO;
+import com.eventmanagement.service.AuthService;
 import com.eventmanagement.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"})
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final AuthService authService;
+    private final UserService userService;
 
-    // Note: Pour l'instant, on simule l'authentification
-    // Dans la prochaine étape, nous implémenterons JWT
+    public AuthController(AuthService authService, UserService userService) {
+        this.authService = authService = authService;
+        this.userService = userService;
+    }
 
     /**
      * Inscription d'un nouvel utilisateur
@@ -45,18 +48,45 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
         try {
-            // Pour l'instant, on retourne juste l'utilisateur
-            // Dans la prochaine étape, nous ajouterons JWT
-            UserResponseDTO user = userService.findByEmail(loginRequestDTO.getEmail());
+           AuthResponseDTO authResponse = authService.login(loginRequestDTO);
+           return ResponseEntity.ok(authResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
-            AuthResponseDTO authResponse = new AuthResponseDTO();
-            authResponse.setUser(user);
-            authResponse.setToken("dummy-token"); // Temporaire
-            authResponse.setRoles(user.getRoles());
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponseDTO> refreshToken(@RequestParam String refreshToken){
 
+        try{
+            AuthResponseDTO authResponse = authService.refereshToken(refreshToken);
             return ResponseEntity.ok(authResponse);
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestParam String token) {
+        try {
+            authService.logout(token);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getCurrentUser() {
+        try {
+            UserResponseDTO user = authService.getCurrentUser();
+            return ResponseEntity.ok(user);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

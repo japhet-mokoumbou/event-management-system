@@ -4,43 +4,63 @@ import java.util.Set;
 
 public class AuthResponseDTO {
 
-    private String token;
-    private String type = "Bearer";
-    private UserResponseDTO user;
+    private String accessToken;
+    private String tokenType;
+    private Long userId;
+    private String fullname;
+    private String email;
     private Set<String> roles;
 
     // Constructeurs
     public AuthResponseDTO() {}
 
-    public AuthResponseDTO(String token, UserResponseDTO user, Set<String> roles) {
-        this.token = token;
-        this.user = user;
+    public AuthResponseDTO(String accessToken, String tokenType, Long userId, String fullname, String email, Set<String> roles) {
+        this.accessToken = accessToken;
+        this.tokenType = tokenType;
+        this.userId = userId;
+        this.fullname = fullname;
+        this.email = email;
         this.roles = roles;
     }
 
-    // Getters et Setters
-    public String getToken() {
-        return token;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
-    public String getType() {
-        return type;
+    public String getTokenType() {
+        return tokenType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
     }
 
-    public UserResponseDTO getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(UserResponseDTO user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Set<String> getRoles() {
