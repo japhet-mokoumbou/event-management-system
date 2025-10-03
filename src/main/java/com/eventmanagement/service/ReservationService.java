@@ -3,6 +3,7 @@ package com.eventmanagement.service;
 import com.eventmanagement.dto.ReservationItemRequestDTO;
 import com.eventmanagement.dto.ReservationRequestDTO;
 import com.eventmanagement.dto.ReservationResponseDTO;
+import com.eventmanagement.dto.ReservationStatisticsDTO;
 import com.eventmanagement.entity.*;
 import com.eventmanagement.mapper.ReservationMapper;
 import com.eventmanagement.repository.EventRepository;
@@ -148,7 +149,31 @@ public class ReservationService {
         }
 
         reservationRepository.delete(reservation);
+    }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Page<ReservationResponseDTO> findByEventId(Long eventId, Pageable pageable){
+
+        return reservationRepository.findByEventId(eventId, pageable)
+                .map(reservationMapper::toResponseDTO);
+    }
+
+    public ReservationStatisticsDTO getReservationStatistics(){
+        long totalReservations = reservationRepository.count();
+        long pendingReservations = reservationRepository.countByStatus(ReservationStatus.PENDING);
+        long paidReservations = reservationRepository.countByStatus(ReservationStatus.PAID);
+        long cancelledReservations = reservationRepository.countByStatus(ReservationStatus.CANCELLED);
+
+        BigDecimal totalRevenue = reservationRepository.sumTotalAmountByStatus(ReservationStatus.PAID);
+        if (totalRevenue == null) totalRevenue = BigDecimal.ZERO;
+
+        return new ReservationStatisticsDTO(
+                totalReservations,
+                pendingReservations,
+                paidReservations,
+                cancelledReservations,
+                totalRevenue
+        );
     }
 }
 

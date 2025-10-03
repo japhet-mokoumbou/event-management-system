@@ -68,8 +68,11 @@ public class SecurityConfig {
 
                         // Endpoints protégés
                         .requestMatchers("/api/users/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/events/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/events/**").hasAnyRole("ADMIN", "USER", "ORGANIZER")
                         .requestMatchers("/api/reservations/**").hasAnyRole("ADMIN", "USER")
+
+                        // Endpoints admin uniquement
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                         // Tous les autres endpoints nécessitent une authentification
                         .anyRequest().authenticated()

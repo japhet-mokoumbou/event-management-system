@@ -19,4 +19,7 @@ public interface TicketTypeRepository extends JpaRepository<TicketType, Long> {
     @Query("SELECT CASE WHEN t.stock >= :quantity THEN true ELSE false END")
     boolean hasEnoughStock(@Param("ticketTypeId") Long ticketTypeId,
                            @Param("quantity") Integer quantity);
+
+    @Query("SELECT COALESCE(SUM(t.stock), 0) FROM TicketType t WHERE t.event.id = :eventId")
+    Integer sumStockByEventId(@Param("eventId") Long eventId);
 }

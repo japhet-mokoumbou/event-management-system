@@ -52,6 +52,17 @@ public class Event extends BaseEntity {
     private List<TicketType> ticketTypes = new ArrayList<>();
 
 
+    @Column(name = "cancelled", nullable = false)
+    private boolean cancelled = false;
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
     public Long getId() {
         return id;
     }

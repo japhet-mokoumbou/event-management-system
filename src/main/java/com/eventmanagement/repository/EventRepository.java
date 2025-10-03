@@ -32,4 +32,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Page<Event> findByCity(String city, Pageable pageable);
 
+    Page<Event> findByStartsAtAfterAndCancelledFalse(LocalDateTime now, Pageable pageable);
+
+    // Chercher les événements dont le titre contient une sous-chaîne donnée
+    Page<Event> findByTitleContainingIgnoreCase(String title, Pageable pageable);
+
+
 }
